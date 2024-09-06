@@ -1,0 +1,19 @@
+redis:
+  url: 127.0.0.1:6379
+  password:
+  key: free_proxy_pool:v1
+
+service:
+  url: 127.0.0.1:5555
+
+
+# 并发数
+concurrent: 200
+# 测试周期
+test_time: "*/1 * * * *"
+# 抓取周期
+crawler_time: "* */5 * * *"
+# 测试链接
+test_urls:
+  - http://www.baidu.com
+
