@@ -112,5 +112,7 @@ func Crawler() {
 	register(
 		&crawlDaiLi66{},
 		&crawlIp3366{},
+		&crawlKxDaiLi{},
+		&crawlProxy11{},
 	)
 }

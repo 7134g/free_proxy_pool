@@ -1,6 +1,8 @@
 package crawler
 
 import (
+	"free_proxy_pool/config"
+	"math/rand"
 	"sort"
 	"sync"
 )
@@ -15,7 +17,7 @@ type Store struct {
 func (s *Store) add(u string) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	s.body[u] = &proxy{link: u}
+	s.body[u] = &proxy{Link: u}
 }
 
 func (s *Store) get(u string) (*proxy, bool) {
@@ -29,9 +31,9 @@ func (s *Store) inc(u string) bool {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	if s.body[u] == nil {
-		s.body[u] = &proxy{link: u, score: 10}
+		s.body[u] = &proxy{Link: u, Score: 10}
 	}
-	s.body[u].score++
+	s.body[u].Score++
 	s.body[u].sucCount++
 
 	return true
@@ -43,10 +45,10 @@ func (s *Store) dnc(u string) bool {
 	if s.body[u] == nil {
 		return false
 	}
-	s.body[u].score--
+	s.body[u].Score--
 	s.body[u].errCount++
 
-	if s.body[u].score < 0 {
+	if s.body[u].Score < 0 {
 		delete(s.body, u)
 	}
 
@@ -62,10 +64,26 @@ func (s *Store) sort() {
 	s.lock.Unlock()
 
 	sort.Slice(list, func(i, j int) bool {
-		return list[i].score > list[j].score
+		return list[i].Score > list[j].Score
 	})
 
-	s.slice = list
+	if len(s.slice) > config.Cfg.PoolCap {
+		s.slice = list[:config.Cfg.PoolCap]
+	} else {
+		s.slice = list
+	}
+
+}
+
+func (s *Store) GetMaxList() []*proxy {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
+	if len(s.slice) > 10 {
+		return s.slice[:10]
+	} else {
+		return s.slice
+	}
 }
 
 func (s *Store) GetOne(index int) string {
@@ -79,7 +97,19 @@ func (s *Store) GetOne(index int) string {
 		index = len(s.slice) - 1
 	}
 
-	return s.slice[index].link
+	if index == 0 {
+		score := s.slice[index].Score
+		ps := make([]string, 0)
+		for _, p := range s.slice {
+			if p.Score != score {
+				break
+			}
+			ps = append(ps, p.Link)
+		}
+		index = rand.Intn(len(ps))
+	}
+
+	return s.slice[index].Link
 }
 
 func (s *Store) GetCount() int {

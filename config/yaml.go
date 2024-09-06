@@ -21,7 +21,7 @@ type setting struct {
 	Service     Service  `yaml:"service"`      // 服务器地址
 	TestTime    string   `yaml:"test_time"`    // 测试周期
 	CrawlerTime string   `yaml:"crawler_time"` // 抓取周期
-	Concurrent  int      `yaml:"concurrent"`   // 并发数
+	PoolCap     int      `yaml:"pool_cap"`     // 代理池中最大存在的代理数
 	TestUrls    []string `yaml:"test_urls"`    // 测试链接
 }
 

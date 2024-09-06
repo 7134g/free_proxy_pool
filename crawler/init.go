@@ -2,15 +2,14 @@ package crawler
 
 import (
 	"context"
-	"free_proxy_pool/config"
 	"free_proxy_pool/util/pool"
 	"time"
 )
 
 type proxy struct {
-	link string
+	Link  string // 代理地址
+	Score int    // 新鲜度
 
-	score    int // 新鲜度
 	errCount int // 测试失败数
 	sucCount int // 测试成功数
 }
@@ -33,7 +32,7 @@ var (
 )
 
 func init() {
-	p, cancel := pool.NewPool(int32(config.Cfg.Concurrent), false, time.Second)
+	p, cancel := pool.NewPool(200, false, time.Second)
 	TaskPool = p
 	TaskCancel = cancel
 
