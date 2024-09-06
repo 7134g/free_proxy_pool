@@ -51,7 +51,7 @@ func (c *crawlDaiLi66) run() {
 	baseUrl := "http://www.66ip.cn%s/%d.html"
 	page := 1911
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100; i++ {
 		for _, local := range locals {
 			link := fmt.Sprintf(baseUrl, local, page+i)
 			if err := catch(c, link); err != nil {

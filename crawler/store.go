@@ -98,15 +98,14 @@ func (s *Store) GetOne(index int) string {
 	}
 
 	if index == 0 {
-		score := s.slice[index].Score
-		ps := make([]string, 0)
-		for _, p := range s.slice {
-			if p.Score != score {
-				break
-			}
-			ps = append(ps, p.Link)
+		ps := 0
+		if len(s.slice) > 10 {
+			ps = 10
+		} else {
+			ps = len(s.slice)
 		}
-		index = rand.Intn(len(ps))
+
+		index = rand.Intn(ps)
 	}
 
 	return s.slice[index].Link
