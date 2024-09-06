@@ -40,6 +40,7 @@ func TestStoreProxy() {
 	for _, p := range list {
 		cell.ProxyChannel <- p.Link
 	}
+	log.Println("tester_stop")
 }
 
 func runTestProxy(link, proxy string) bool {
@@ -55,14 +56,14 @@ func runTestProxy(link, proxy string) bool {
 	client.Transport = &http.Transport{Proxy: http.ProxyURL(u)}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println(err)
+		//log.Println(err)
 		return false
 	}
 
 	if resp != nil {
 		defer resp.Body.Close()
 	} else {
-		log.Println("response is nil")
+		//log.Println("response is nil")
 		return false
 	}
 
@@ -70,7 +71,7 @@ func runTestProxy(link, proxy string) bool {
 	case http.StatusOK:
 		return true
 	default:
-		log.Printf("response status code is %d\n", resp.StatusCode)
+		//log.Printf("response status code is %d\n", resp.StatusCode)
 		return false
 	}
 }

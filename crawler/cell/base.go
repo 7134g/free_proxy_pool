@@ -115,4 +115,5 @@ func Crawler() {
 		&crawlKxDaiLi{},
 		&crawlProxy11{},
 	)
+	log.Println("crawler_stop")
 }

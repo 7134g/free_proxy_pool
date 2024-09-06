@@ -4,7 +4,7 @@ redis:
   key: free_proxy_pool:v1
 
 service:
-  url: 127.0.0.1:9999
+  url: 127.0.0.1:5555
 
 
 # 代理池中最大存在的代理数
