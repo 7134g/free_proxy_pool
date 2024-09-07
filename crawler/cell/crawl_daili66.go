@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"log"
 )
 
 type crawlDaiLi66 struct {
@@ -14,7 +13,8 @@ type crawlDaiLi66 struct {
 func (c *crawlDaiLi66) name() string {
 	return "crawlDaiLi66"
 }
-func (c *crawlDaiLi66) run() {
+
+func (c *crawlDaiLi66) genSeek() {
 	locals := []string{
 		"/areaindex_1",
 		"/areaindex_2",
@@ -54,15 +54,13 @@ func (c *crawlDaiLi66) run() {
 	for i := 0; i < 100; i++ {
 		for _, local := range locals {
 			link := fmt.Sprintf(baseUrl, local, page+i)
-			if err := catch(c, link); err != nil {
-				log.Println("crawlDaiLi66 error:", err)
-				continue
-			}
+			c.links = append(c.links, link)
 		}
-		c.keepRunning()
 	}
+}
 
-	return
+func (c *crawlDaiLi66) run() {
+	c.defaultRun(c)
 }
 
 func (c *crawlDaiLi66) parse(html []byte) ([]string, error) {

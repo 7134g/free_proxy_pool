@@ -3,6 +3,7 @@ package crawler
 import (
 	"free_proxy_pool/config"
 	"free_proxy_pool/crawler/cell"
+	"free_proxy_pool/util/xhttp"
 	"github.com/robfig/cron/v3"
 	"log"
 	"time"
@@ -32,6 +33,7 @@ func monitor() {
 		case <-ticker.C:
 			log.Println("proxy pool size:", CacheProxyData.GetCount())
 			CacheProxyData.sort()
+			xhttp.SetLocalProxy(CacheProxyData.GetMax(0))
 
 		case link := <-cell.ProxyChannel:
 			if err := TaskPool.Submit(TestProxy(link)); err != nil {

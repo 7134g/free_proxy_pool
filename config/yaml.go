@@ -38,4 +38,10 @@ func Init(p string) {
 	if err := decode.Decode(&Cfg); err != nil {
 		log.Fatalln(err)
 	}
+
+	InitRedis()
+}
+
+func InitRedis() {
+	// todo
 }

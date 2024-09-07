@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"log"
 )
 
 type crawlProxy11 struct {
@@ -15,21 +14,7 @@ func (c *crawlProxy11) name() string {
 	return "crawlProxy11"
 }
 
-func (c *crawlProxy11) run() {
-	/*
-
-	    https://proxy11.com/free-proxy/speed
-
-	   /free-proxy
-	   /free-proxy/speed
-	   /free-proxy/us
-	   /free-proxy/anonymous
-	   /free-proxy/instagram
-	   /free-proxy/google
-	   /free-proxy/prot-8080
-
-	*/
-
+func (c *crawlProxy11) genSeek() {
 	urls := []string{
 		"https://proxy11.com/free-proxy",
 		"https://proxy11.com/free-proxy/speed",
@@ -41,13 +26,12 @@ func (c *crawlProxy11) run() {
 	}
 
 	for _, u := range urls {
-		if err := catch(c, u); err != nil {
-			log.Println("crawlIp3366 error:", err)
-			continue
-		}
-		c.keepRunning()
+		c.links = append(c.links, u)
 	}
+}
 
+func (c *crawlProxy11) run() {
+	c.defaultRun(c)
 }
 
 func (c *crawlProxy11) parse(html []byte) ([]string, error) {

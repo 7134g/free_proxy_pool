@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"free_proxy_pool/util"
 	"github.com/PuerkitoBio/goquery"
-	"log"
 	"strings"
 )
 
@@ -13,13 +12,7 @@ type crawlKxDaiLi struct {
 	crawl
 }
 
-func (c *crawlKxDaiLi) name() string {
-	return "crawlKxDaiLi"
-}
-
-func (c *crawlKxDaiLi) run() {
-	// http://www.kxdaili.com/dailiip/1/1.html
-
+func (c *crawlKxDaiLi) genSeek() {
 	urls := []string{
 		"http://www.kxdaili.com/dailiip/1/%d.html",
 		"http://www.kxdaili.com/dailiip/2/%d.html",
@@ -28,13 +21,17 @@ func (c *crawlKxDaiLi) run() {
 	for _, u := range urls {
 		for page := 1; page < 50; page++ {
 			link := fmt.Sprintf(u, page)
-			if err := catch(c, link); err != nil {
-				log.Println("crawlIp3366 error:", err)
-				continue
-			}
+			c.links = append(c.links, link)
 		}
-		c.keepRunning()
 	}
+}
+
+func (c *crawlKxDaiLi) name() string {
+	return "crawlKxDaiLi"
+}
+
+func (c *crawlKxDaiLi) run() {
+	c.defaultRun(c)
 }
 
 func (c *crawlKxDaiLi) parse(html []byte) ([]string, error) {

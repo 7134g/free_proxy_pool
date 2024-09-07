@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
 var defaultHeader = http.Header{}
@@ -62,6 +63,10 @@ func Post(url string, body io.Reader) ([]byte, error) {
 
 func connect(req *http.Request) ([]byte, error) {
 	client := &http.Client{}
+	if localProxy != "" {
+		u, _ := url.Parse(localProxy)
+		client.Transport = &http.Transport{Proxy: http.ProxyURL(u)}
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

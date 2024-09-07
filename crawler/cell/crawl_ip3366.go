@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"free_proxy_pool/util"
 	"github.com/PuerkitoBio/goquery"
-	"log"
 	"strings"
 )
 
@@ -17,17 +16,16 @@ func (c *crawlIp3366) name() string {
 	return "crawlIp3366"
 }
 
-func (c *crawlIp3366) run() {
-
+func (c *crawlIp3366) genSeek() {
 	baseUrl := "http://www.ip3366.net/?stype=1&page=%d"
 	for page := 1; page < 100; page++ {
 		link := fmt.Sprintf(baseUrl, page)
-		if err := catch(c, link); err != nil {
-			log.Println("crawlIp3366 error:", err)
-			continue
-		}
+		c.links = append(c.links, link)
 	}
+}
 
+func (c *crawlIp3366) run() {
+	c.defaultRun(c)
 }
 
 func (c *crawlIp3366) parse(html []byte) ([]string, error) {

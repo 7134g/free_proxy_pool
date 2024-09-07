@@ -4,9 +4,13 @@ import (
 	"free_proxy_pool/config"
 	"github.com/gin-gonic/gin"
 	"log"
+	"os"
+	"syscall"
 )
 
 func Run() {
+	gin.SetMode(gin.ReleaseMode)
+	gin.DefaultWriter = os.NewFile(uintptr(syscall.Stdin), os.DevNull)
 
 	r := gin.Default()
 	InitRouter(r)

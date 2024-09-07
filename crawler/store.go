@@ -89,7 +89,7 @@ func (s *Store) GetMaxList() []*proxy {
 	}
 }
 
-func (s *Store) GetOne(index int) string {
+func (s *Store) GetMax(index int) string {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	if s.slice == nil || len(s.slice) == 0 {

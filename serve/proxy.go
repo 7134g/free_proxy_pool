@@ -8,7 +8,7 @@ import (
 )
 
 func proxyMax(ctx *gin.Context) {
-	ctx.String(200, crawler.CacheProxyData.GetOne(0))
+	ctx.String(200, crawler.CacheProxyData.GetMax(0))
 }
 
 func proxyList(ctx *gin.Context) {
@@ -21,7 +21,7 @@ func proxyRandom(ctx *gin.Context) {
 	count := crawler.CacheProxyData.GetCount()
 	index := rand.Intn(count)
 
-	ctx.String(200, crawler.CacheProxyData.GetOne(index))
+	ctx.String(200, crawler.CacheProxyData.GetMax(index))
 }
 
 func proxyUseless(ctx *gin.Context) {
