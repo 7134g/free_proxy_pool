@@ -35,11 +35,18 @@ func addProxyFinish(link string, status bool) {
 
 // TestStoreProxy 测试此时库里的代理是否有效
 func TestStoreProxy() {
+	if TesterRunning {
+		log.Println("tester is running.......")
+		return
+	}
+
 	log.Println("tester_start......测试代理")
 	list := CacheProxyData.slice
+	log.Println("tester_count: ", len(list))
 	for _, p := range list {
 		cell.ProxyChannel <- p.Link
 	}
+	TesterRunning = false
 	log.Println("tester_stop")
 }
 

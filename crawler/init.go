@@ -2,6 +2,8 @@ package crawler
 
 import (
 	"context"
+	"free_proxy_pool/config"
+	"free_proxy_pool/util/cas"
 	"free_proxy_pool/util/pool"
 	"time"
 )
@@ -12,6 +14,15 @@ type proxy struct {
 
 	errCount int // 测试失败数
 	sucCount int // 测试成功数
+}
+
+func newProxy(link string) *proxy {
+	return &proxy{
+		Link:     link,
+		Score:    config.Cfg.FlashScore,
+		errCount: 0,
+		sucCount: 0,
+	}
 }
 
 type proxyResult struct {
@@ -28,7 +39,7 @@ var (
 	TaskCancel     context.CancelFunc
 
 	ProxyFinishChannel chan proxyResult // 结果队列
-
+	TesterRunning      bool             // 是否处于测试爬虫运行中
 )
 
 func init() {
@@ -40,5 +51,6 @@ func init() {
 
 	CacheProxyData = &Store{
 		body: map[string]*proxy{},
+		lock: cas.NewSpinLock(),
 	}
 }

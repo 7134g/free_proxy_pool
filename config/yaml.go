@@ -23,6 +23,7 @@ type setting struct {
 	CrawlerTime string   `yaml:"crawler_time"` // 抓取周期
 	PoolCap     int      `yaml:"pool_cap"`     // 代理池中最大存在的代理数
 	TestUrls    []string `yaml:"test_urls"`    // 测试链接
+	FlashScore  int      `yaml:"flash_score"`  // 新鲜度
 }
 
 var Cfg setting

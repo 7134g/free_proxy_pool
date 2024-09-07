@@ -8,7 +8,7 @@ import (
 )
 
 type Store struct {
-	lock sync.Mutex
+	lock sync.Locker
 	body map[string]*proxy
 
 	slice []*proxy
@@ -17,7 +17,7 @@ type Store struct {
 func (s *Store) add(u string) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
-	s.body[u] = &proxy{Link: u}
+	s.body[u] = newProxy(u)
 }
 
 func (s *Store) get(u string) (*proxy, bool) {
@@ -31,7 +31,7 @@ func (s *Store) inc(u string) bool {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	if s.body[u] == nil {
-		s.body[u] = &proxy{Link: u, Score: 10}
+		s.body[u] = newProxy(u)
 	}
 	s.body[u].Score++
 	s.body[u].sucCount++
@@ -78,6 +78,9 @@ func (s *Store) sort() {
 func (s *Store) GetMaxList() []*proxy {
 	s.lock.Lock()
 	defer s.lock.Unlock()
+	if len(s.slice) == 0 {
+		return nil
+	}
 
 	if len(s.slice) > 10 {
 		return s.slice[:10]
@@ -89,6 +92,10 @@ func (s *Store) GetMaxList() []*proxy {
 func (s *Store) GetOne(index int) string {
 	s.lock.Lock()
 	defer s.lock.Unlock()
+	if s.slice == nil || len(s.slice) == 0 {
+		return ""
+	}
+
 	if index < 0 {
 		index = 0
 	}
