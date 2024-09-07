@@ -48,7 +48,7 @@ func (s *Store) dnc(u string) bool {
 	s.body[u].Score--
 	s.body[u].errCount++
 
-	if s.body[u].Score < 0 {
+	if s.body[u].Score <= 0 {
 		delete(s.body, u)
 	}
 
