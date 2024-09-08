@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"free_proxy_pool/util/cas"
 	"github.com/google/martian"
 	"github.com/google/martian/log"
 	"github.com/google/martian/mitm"
@@ -29,6 +30,7 @@ var (
 )
 
 func init() {
+	lock = cas.NewSpinLock()
 	log.SetLevel(log.Silent)
 }
 
@@ -99,5 +101,12 @@ func (r *httpProxy) ModifyRequest(req *http.Request) error {
 }
 
 func (r *httpProxy) ModifyResponse(res *http.Response) error {
+	switch res.StatusCode {
+	case 200, 201, 202, 301, 302:
+		break
+	default:
+		taskIncError()
+	}
+
 	return nil
 }

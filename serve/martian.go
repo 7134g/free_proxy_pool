@@ -27,15 +27,21 @@ func monitor() {
 	for {
 		select {
 		case <-ticker.C:
+			if !proxy.TaskCheckError() {
+				return
+			}
+
+			var newProxy string
 			switch config.Cfg.MartianMode {
 			case "random":
-				proxy.SetServeProxyAddress(crawler.CacheProxyData.Random(), "", "")
+				newProxy = crawler.CacheProxyData.Random()
 			case "max":
-				proxy.SetServeProxyAddress(crawler.CacheProxyData.GetOnce(0), "", "")
+				newProxy = crawler.CacheProxyData.GetOnce(0)
 			default:
-				proxy.SetServeProxyAddress(crawler.CacheProxyData.GetOnce(0), "", "")
-
+				newProxy = crawler.CacheProxyData.GetOnce(0)
 			}
+
+			proxy.SetServeProxyAddress(newProxy, "", "")
 		}
 	}
 }
