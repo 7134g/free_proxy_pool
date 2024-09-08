@@ -28,13 +28,20 @@ type setting struct {
 	FlashScore  int      `yaml:"flash_score"`  // 新鲜度
 }
 
-var Cfg setting
+var (
+	Cfg        setting
+	ConfigPath string
+)
 
 func Init(p string) {
+	if ConfigPath == "" {
+		ConfigPath = p
+	}
 	f, err := os.Open(p)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer f.Close()
 
 	decode := yaml.NewDecoder(f)
 	if err := decode.Decode(&Cfg); err != nil {

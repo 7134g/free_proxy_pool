@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"github.com/google/martian"
+	"github.com/google/martian/log"
 	"github.com/google/martian/mitm"
 	"github.com/google/martian/priority"
 	"net"
@@ -27,9 +28,9 @@ var (
 	serverProxyPassword string // 密码
 )
 
-//func init() {
-//	log.SetLevel(log.Silent)
-//}
+func init() {
+	log.SetLevel(log.Silent)
+}
 
 func OpenCert() {
 	certFlag = true

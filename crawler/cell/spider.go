@@ -22,7 +22,7 @@ func (c *crawl) defaultRun(s spider) {
 	s.genSeek()
 	for _, link := range c.links {
 		if err := catch(s, link); err != nil {
-			log.Printf("%s error: %v\n", s.name(), err)
+			//log.Printf("%s error: %v\n", s.name(), err)
 			continue
 		}
 	}

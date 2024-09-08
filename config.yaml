@@ -9,7 +9,7 @@ service:
 # 代理地址
 martian: 127.0.0.1:10888
 # 使用代理池代理的模式 random 或者 max
-martian_mode: random
+martian_mode: max
 
 # 代理池中最大存在的代理数
 pool_cap: 200
