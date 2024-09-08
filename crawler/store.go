@@ -89,7 +89,7 @@ func (s *Store) GetMaxList() []*proxy {
 	}
 }
 
-func (s *Store) GetMax(index int) string {
+func (s *Store) GetOnce(index int) string {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	if s.slice == nil || len(s.slice) == 0 {
@@ -105,6 +105,7 @@ func (s *Store) GetMax(index int) string {
 	}
 
 	if index == 0 {
+		// max
 		ps := 0
 		if len(s.slice) > 10 {
 			ps = 10
@@ -115,6 +116,13 @@ func (s *Store) GetMax(index int) string {
 		index = rand.Intn(ps)
 	}
 
+	return s.slice[index].Link
+}
+
+func (s *Store) Random() string {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+	index := rand.Intn(len(s.slice))
 	return s.slice[index].Link
 }
 

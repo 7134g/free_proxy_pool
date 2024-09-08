@@ -33,7 +33,7 @@ func monitor() {
 		case <-ticker.C:
 			log.Println("proxy pool size:", CacheProxyData.GetCount())
 			CacheProxyData.sort()
-			xhttp.SetLocalProxy(CacheProxyData.GetMax(0))
+			xhttp.SetLocalProxy(CacheProxyData.GetOnce(0))
 
 		case link := <-cell.ProxyChannel:
 			if err := TaskPool.Submit(TestProxy(link)); err != nil {

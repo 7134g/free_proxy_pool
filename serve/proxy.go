@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"free_proxy_pool/crawler"
 	"github.com/gin-gonic/gin"
-	"math/rand"
 )
 
 func proxyMax(ctx *gin.Context) {
-	ctx.String(200, crawler.CacheProxyData.GetMax(0))
+	ctx.String(200, crawler.CacheProxyData.GetOnce(0))
 }
 
 func proxyList(ctx *gin.Context) {
@@ -18,10 +17,7 @@ func proxyList(ctx *gin.Context) {
 }
 
 func proxyRandom(ctx *gin.Context) {
-	count := crawler.CacheProxyData.GetCount()
-	index := rand.Intn(count)
-
-	ctx.String(200, crawler.CacheProxyData.GetMax(index))
+	ctx.String(200, crawler.CacheProxyData.Random())
 }
 
 func proxyUseless(ctx *gin.Context) {

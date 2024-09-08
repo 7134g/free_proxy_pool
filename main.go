@@ -15,6 +15,8 @@ func main() {
 
 	go serve.Run()
 
+	go serve.Martian()
+
 	go crawler.Run()
 
 	select {}
