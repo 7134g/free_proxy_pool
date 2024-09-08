@@ -40,6 +40,7 @@ func TestStoreProxy() {
 		return
 	}
 
+	TesterRunning = true
 	log.Println("tester_start......测试代理")
 	list := CacheProxyData.slice
 	log.Println("tester_count: ", len(list))
