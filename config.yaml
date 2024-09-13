@@ -9,6 +9,8 @@ service:
 # 代理地址
 martian: 127.0.0.1:10888
 # 使用代理池代理的模式 random 或者 max
+# random： 随机代理
+# max： 取最大10个中的一个
 martian_mode: random
 
 # 代理池中最大存在的代理数
@@ -17,8 +19,8 @@ pool_cap: 200
 test_time: "*/1 * * * *"
 # 抓取周期
 crawler_time: "*/5 * * * *"
-# 测试链接
+# 测试链接，用于检查抓取的代理是否可用
 test_urls:
   - https://ada.baidu.com
-# 新鲜度分数
+# 新鲜度分数，成功进入代理池的代理，会根据这个分数来判断是否被丢弃，每次失败就减1，0则从代理池删除
 flash_score: 5

@@ -50,7 +50,7 @@ func monitor() {
 				continue
 			}
 
-			// 未添加过
+			// 未添加过的新代理
 			ctLessFiveMinute := result.createAt.Add(-time.Minute * 5)
 			if result.createAt.After(ctLessFiveMinute) && result.countFail < 5 {
 				result.countFail++
