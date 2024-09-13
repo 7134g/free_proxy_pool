@@ -9,10 +9,12 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 var (
 	MonitorAddress = "127.0.0.1:10888" // 监听地址
+	RunningTime    = time.Now()
 )
 
 var (
@@ -94,6 +96,7 @@ func newHttpProxy() *httpProxy {
 }
 
 func (r *httpProxy) ModifyRequest(req *http.Request) error {
+	RunningTime = time.Now()
 	if serverProxyFlag {
 		httpMartian.SetDownstreamProxy(serverProxyUrlParse)
 	}

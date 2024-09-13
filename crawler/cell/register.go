@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	ProxyChannel = make(chan string, 10000)
+	ProxyChannel = make(chan string, 1000)
 	spiderMap = make(map[string]struct{})
 	SleepTime = time.Second * 5
 

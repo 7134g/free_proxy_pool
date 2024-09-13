@@ -15,7 +15,7 @@ func Run() {
 	r := gin.Default()
 	InitRouter(r)
 
-	log.Println("服务地址：", config.Cfg.Service.Url)
+	log.Println("启动服务===========>：", config.Cfg.Service.Url)
 	if err := r.Run(config.Cfg.Service.Url); err != nil {
 		log.Fatalln(err)
 	}
