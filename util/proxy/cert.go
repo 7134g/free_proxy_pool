@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rsa"
 	"crypto/x509"
+	_ "embed"
 	"encoding/pem"
 	"github.com/google/martian/mitm"
 	"os"
@@ -21,6 +22,11 @@ var (
 	private *rsa.PrivateKey
 	caName  = "mitm.crt"
 	priName = "pri.pem"
+
+	//go:embed mitm.crt
+	mitmData []byte
+	//go:embed pri.pem
+	priData []byte
 )
 
 func LoadCert() error {
@@ -43,10 +49,6 @@ func LoadCert() error {
 
 // 加载根证书
 func loadRootCA() (*x509.Certificate, error) {
-	mitmData, err := os.ReadFile(caName)
-	if err != nil {
-		return nil, err
-	}
 	block, _ := pem.Decode(mitmData)
 
 	return x509.ParseCertificate(block.Bytes)
@@ -54,11 +56,6 @@ func loadRootCA() (*x509.Certificate, error) {
 
 // 加载根证书私钥
 func loadRootKey() (*rsa.PrivateKey, error) {
-	priData, err := os.ReadFile(priName)
-	if err != nil {
-		return nil, err
-	}
-
 	block, _ := pem.Decode(priData)
 
 	return x509.ParsePKCS1PrivateKey(block.Bytes)

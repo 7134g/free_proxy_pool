@@ -30,10 +30,6 @@ func (c *crawlProxy11) genSeek() {
 	}
 }
 
-func (c *crawlProxy11) run() {
-	c.defaultRun(c)
-}
-
 func (c *crawlProxy11) parse(html []byte) ([]string, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(html))
 	if err != nil {

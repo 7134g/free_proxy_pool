@@ -1,4 +1,4 @@
-package cell
+package util
 
 import (
 	"free_proxy_pool/util/cas"

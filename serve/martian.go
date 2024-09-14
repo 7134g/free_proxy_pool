@@ -30,7 +30,7 @@ func monitor() {
 	for {
 		select {
 		case <-checkMartianProxyTicker.C:
-			if now.Sub(proxy.RunningTime) <= time.Second*5 {
+			if proxy.RunningTime.Sub(now) <= time.Second*5 {
 				continue
 			}
 
@@ -45,7 +45,7 @@ func monitor() {
 				martianProxyStatus = false
 			}
 		case <-ticker.C:
-			if !proxy.TaskCheckError() {
+			if !proxy.TaskCheckError() && proxy.GetServeProxy() != nil {
 				continue
 			}
 
@@ -59,6 +59,11 @@ func monitor() {
 				newProxy = crawler.CacheProxyData.GetOnce(0)
 			}
 
+			if newProxy == "" {
+				continue
+			}
+
+			log.Println("----------->", newProxy)
 			proxy.SetServeProxyAddress(newProxy, "", "")
 		}
 	}

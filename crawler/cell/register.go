@@ -1,6 +1,7 @@
 package cell
 
 import (
+	"free_proxy_pool/util"
 	"log"
 	"time"
 )
@@ -10,7 +11,7 @@ var (
 	spiderMap    map[string]struct{} // 爬虫列表
 	SleepTime    time.Duration       // 抓取间隔
 
-	linkErrorMap *LinkMap
+	linkErrorMap *util.LinkMap
 )
 
 func init() {
@@ -18,7 +19,7 @@ func init() {
 	spiderMap = make(map[string]struct{})
 	SleepTime = time.Second * 5
 
-	linkErrorMap = NewLinkMap()
+	linkErrorMap = util.NewLinkMap()
 }
 
 func register(spiders ...spider) {
@@ -41,7 +42,7 @@ func runSpider(s spider) {
 	}()
 
 	log.Printf("启动爬虫：%v\n", s.name())
-	s.run()
+	s.run(s)
 	log.Printf("爬虫：%v 已停止运行\n", s.name())
 }
 

@@ -1,6 +1,7 @@
 package proxy
 
 import (
+	"errors"
 	"free_proxy_pool/util/cas"
 	"github.com/google/martian"
 	"github.com/google/martian/log"
@@ -25,7 +26,6 @@ var (
 var (
 	serverProxyUrlParse *url.URL // 解析代理
 
-	serverProxyFlag     bool   // 启用代理
 	serverProxy         string // 服务代理地址
 	serverProxyUsername string // 用户名
 	serverProxyPassword string // 密码
@@ -41,9 +41,12 @@ func OpenCert() {
 	_ = LoadCert()
 }
 
+func GetServeProxy() *url.URL {
+	return serverProxyUrlParse
+}
+
 func SetServeProxyAddress(address, username, password string) {
 	if address == "" {
-		serverProxyFlag = false
 		return
 	}
 	serverProxy = address
@@ -51,14 +54,15 @@ func SetServeProxyAddress(address, username, password string) {
 	serverProxyPassword = password
 	u, err := url.Parse(serverProxy)
 	if err != nil {
-		serverProxyFlag = false
 		return
 	}
 	serverProxyUrlParse = u
-	serverProxyFlag = true
+	httpMartian.SetDownstreamProxy(serverProxyUrlParse)
 }
 
 func Martian() error {
+	OpenCert()
+
 	httpMartian = martian.NewProxy()
 	if certFlag {
 		mc, err := mitm.NewConfig(ca, private)
@@ -96,14 +100,20 @@ func newHttpProxy() *httpProxy {
 }
 
 func (r *httpProxy) ModifyRequest(req *http.Request) error {
-	RunningTime = time.Now()
-	if serverProxyFlag {
-		httpMartian.SetDownstreamProxy(serverProxyUrlParse)
+	//fmt.Println("------------>")
+	if serverProxyUrlParse == nil {
+		ctx := martian.NewContext(req)
+		ctx.SkipRoundTrip()
+		//fmt.Printf("-----------> %s", req.URL.String())
+		return errors.New("proxy is nil")
 	}
+
+	RunningTime = time.Now()
 	return nil
 }
 
 func (r *httpProxy) ModifyResponse(res *http.Response) error {
+	//fmt.Println("<----------------")
 	switch res.StatusCode {
 	case 200, 201, 202, 301, 302:
 		break

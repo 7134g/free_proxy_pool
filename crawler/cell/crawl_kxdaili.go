@@ -30,10 +30,6 @@ func (c *crawlKxDaiLi) name() string {
 	return "crawlKxDaiLi"
 }
 
-func (c *crawlKxDaiLi) run() {
-	c.defaultRun(c)
-}
-
 func (c *crawlKxDaiLi) parse(html []byte) ([]string, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(html))
 	if err != nil {

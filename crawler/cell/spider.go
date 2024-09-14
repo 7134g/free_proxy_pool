@@ -10,7 +10,7 @@ import (
 type spider interface {
 	name() string
 	genSeek()
-	run()
+	run(s spider)
 	parse(html []byte) ([]string, error)
 }
 
@@ -18,7 +18,7 @@ type crawl struct {
 	links []string
 }
 
-func (c *crawl) defaultRun(s spider) {
+func (c *crawl) run(s spider) {
 	s.genSeek()
 	for _, link := range c.links {
 		if err := catch(s, link); err != nil {
@@ -37,8 +37,9 @@ func catch(s spider, link string) error {
 		return nil
 	}
 
-	log.Printf("正在抓取：%v\n", link)
+	log.Printf("%s 正在抓取：%v\n", s.name(), link)
 	dat, err := xhttp.Get(link)
+	time.Sleep(SleepTime)
 	if err != nil {
 		return err
 	}
@@ -60,8 +61,6 @@ func catch(s spider, link string) error {
 	for _, url := range urls {
 		addUrl(url)
 	}
-
-	time.Sleep(SleepTime)
 
 	return nil
 }

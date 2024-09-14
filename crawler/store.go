@@ -122,6 +122,10 @@ func (s *Store) GetOnce(index int) string {
 func (s *Store) Random() string {
 	s.lock.Lock()
 	defer s.lock.Unlock()
+	if len(s.slice) == 0 {
+		return ""
+	}
+
 	index := rand.Intn(len(s.slice))
 	return s.slice[index].Link
 }

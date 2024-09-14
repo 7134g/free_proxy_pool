@@ -59,10 +59,6 @@ func (c *crawlDaiLi66) genSeek() {
 	}
 }
 
-func (c *crawlDaiLi66) run() {
-	c.defaultRun(c)
-}
-
 func (c *crawlDaiLi66) parse(html []byte) ([]string, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(html))
 	if err != nil {

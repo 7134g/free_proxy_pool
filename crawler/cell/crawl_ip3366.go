@@ -24,10 +24,6 @@ func (c *crawlIp3366) genSeek() {
 	}
 }
 
-func (c *crawlIp3366) run() {
-	c.defaultRun(c)
-}
-
 func (c *crawlIp3366) parse(html []byte) ([]string, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(html))
 	if err != nil {
