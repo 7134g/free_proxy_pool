@@ -7,19 +7,22 @@ service:
   url: 127.0.0.1:5555
 
 # 注意： 若代理池为空，那么不会发送任何请求
-# 代理地址
-martian: 127.0.0.1:10888
-# 代理模式类型 random 或者 max
-# random：随机代理
-# max：取最大10个中的一个
-martian_mode: random
+martian:
+  # 代理地址
+  url: 127.0.0.1:10888
+  # 代理模式类型 random 或者 max
+  # random：随机代理
+  # max：取最大10个中的一个
+  mode: random
+  # 错误最大值
+  error_max_count: 5
 
 # 代理池中最大存在的代理数
 pool_cap: 200
 # 测试周期
-test_time: "*/1 * * * *"
+test_time: "*/3 * * * *"
 # 抓取周期
-crawler_time: "*/5 * * * *"
+crawler_time: "* * */1 * *"
 # 测试链接，用于检查抓取的代理是否可用
 test_urls:
   - https://ada.baidu.com

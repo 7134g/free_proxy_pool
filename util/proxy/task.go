@@ -14,11 +14,11 @@ func taskIncError() {
 	errorCount++
 }
 
-func TaskCheckError() bool {
+func TaskCheckError(max int) bool {
 	lock.Lock()
 	defer lock.Unlock()
 
-	flag := errorCount >= 50
+	flag := errorCount >= max
 	if flag {
 		errorCount = 0
 	}

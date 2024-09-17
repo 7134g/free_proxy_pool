@@ -36,7 +36,7 @@ func monitor() {
 			xhttp.SetLocalProxy(CacheProxyData.GetOnce(0))
 
 		case link := <-cell.ProxyChannel:
-			if err := TaskPool.Submit(TestProxy(link)); err != nil {
+			if err := TaskPool.Submit(checkProxy(link)); err != nil {
 				log.Println(err)
 			}
 
@@ -54,7 +54,7 @@ func monitor() {
 			ctLessFiveMinute := result.createAt.Add(-time.Minute * 5)
 			if result.createAt.After(ctLessFiveMinute) && result.countFail < 5 {
 				result.countFail++
-				if err := TaskPool.Submit(TestProxy(result.link)); err != nil {
+				if err := TaskPool.Submit(checkProxy(result.link)); err != nil {
 					log.Println(err)
 				}
 			}

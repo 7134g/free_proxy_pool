@@ -38,8 +38,8 @@ func catch(s spider, link string) error {
 	}
 
 	log.Printf("%s 正在抓取：%v\n", s.name(), link)
+	defer time.Sleep(SleepTime)
 	dat, err := xhttp.Get(link)
-	time.Sleep(SleepTime)
 	if err != nil {
 		return err
 	}

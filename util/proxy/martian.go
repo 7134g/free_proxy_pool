@@ -15,7 +15,7 @@ import (
 
 var (
 	MonitorAddress = "127.0.0.1:10888" // 监听地址
-	RunningTime    = time.Now()
+	RunningTime    time.Time
 )
 
 var (

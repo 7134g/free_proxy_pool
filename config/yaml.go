@@ -16,11 +16,16 @@ type Service struct {
 	Url string `yaml:"url"`
 }
 
+type Martian struct {
+	Url           string `yaml:"url"`
+	Mode          string `yaml:"mode"`            // 代理模式类型
+	ErrorMaxCount int    `yaml:"error_max_count"` // 错误最大值
+}
+
 type setting struct {
 	Redis       Redis    `yaml:"redis"`        // redis 配置
 	Service     Service  `yaml:"service"`      // 服务器地址
-	Martian     string   `yaml:"martian"`      // 代理服务
-	MartianMode string   `yaml:"martian_mode"` // 代理模式类型
+	Martian     Martian  `yaml:"martian"`      // 代理服务
 	TestTime    string   `yaml:"test_time"`    // 测试周期
 	CrawlerTime string   `yaml:"crawler_time"` // 抓取周期
 	PoolCap     int      `yaml:"pool_cap"`     // 代理池中最大存在的代理数

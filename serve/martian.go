@@ -9,13 +9,13 @@ import (
 )
 
 func Martian() {
-	if config.Cfg.Martian == "" {
+	if config.Cfg.Martian.Url == "" {
 		return
 	}
 	go monitor()
 
 	log.Println("开启代理服务==================>", config.Cfg.Martian)
-	proxy.MonitorAddress = config.Cfg.Martian
+	proxy.MonitorAddress = config.Cfg.Martian.Url
 	if err := proxy.Martian(); err != nil {
 		log.Fatalln(err)
 	}
@@ -45,12 +45,12 @@ func monitor() {
 				martianProxyStatus = false
 			}
 		case <-ticker.C:
-			if !proxy.TaskCheckError() && proxy.GetServeProxy() != nil {
+			if !proxy.TaskCheckError(config.Cfg.Martian.ErrorMaxCount) && proxy.GetServeProxy() != nil {
 				continue
 			}
 
 			var newProxy string
-			switch config.Cfg.MartianMode {
+			switch config.Cfg.Martian.Mode {
 			case "random":
 				newProxy = crawler.CacheProxyData.Random()
 			case "max":

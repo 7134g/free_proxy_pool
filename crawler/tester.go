@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func TestProxy(proxy string) *pool.Task {
+func checkProxy(proxy string) *pool.Task {
 	t := &pool.Task{}
 	t.Param = []interface{}{proxy}
 	t.TaskFunc = func(i []interface{}) {
@@ -23,13 +23,13 @@ func TestProxy(proxy string) *pool.Task {
 
 		for _, link := range config.Cfg.TestUrls {
 			status := runTestProxy(link, proxy)
-			addProxyFinish(proxy, status)
+			addProxyResult(proxy, status)
 		}
 	}
 	return t
 }
 
-func addProxyFinish(link string, status bool) {
+func addProxyResult(link string, status bool) {
 	ProxyFinishChannel <- proxyResult{link: link, status: status, createAt: time.Now()}
 }
 

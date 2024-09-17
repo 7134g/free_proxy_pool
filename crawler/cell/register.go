@@ -9,15 +9,14 @@ import (
 var (
 	ProxyChannel chan string         // 抓取到的代理队列
 	spiderMap    map[string]struct{} // 爬虫列表
-	SleepTime    time.Duration       // 抓取间隔
+	SleepTime    = time.Second * 5   // 抓取间隔
 
 	linkErrorMap *util.LinkMap
 )
 
 func init() {
-	ProxyChannel = make(chan string, 1000)
+	ProxyChannel = make(chan string, 200)
 	spiderMap = make(map[string]struct{})
-	SleepTime = time.Second * 5
 
 	linkErrorMap = util.NewLinkMap()
 }
