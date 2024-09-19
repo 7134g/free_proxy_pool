@@ -21,30 +21,6 @@ func init() {
 	linkErrorMap = util.NewLinkMap()
 }
 
-func register(spiders ...spider) {
-	for _, s := range spiders {
-		_, exist := spiderMap[s.name()]
-		if exist {
-			continue
-		}
-
-		go runSpider(s)
-	}
-}
-
-func runSpider(s spider) {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Printf("爬虫：%v 运行失败，错误信息：%v\n", s.name(), err)
-		}
-		delete(spiderMap, s.name())
-	}()
-
-	log.Printf("启动爬虫：%v\n", s.name())
-	s.run(s)
-	log.Printf("爬虫：%v 已停止运行\n", s.name())
-}
-
 // Crawler 启动爬虫
 func Crawler() {
 
@@ -56,4 +32,28 @@ func Crawler() {
 		&crawlProxy11{},
 	)
 	log.Println("crawler_stop")
+}
+
+func register(spiders ...spider) {
+	for _, s := range spiders {
+		_, exist := spiderMap[s.name()]
+		if exist {
+			continue
+		}
+
+		go execute(s)
+	}
+}
+
+func execute(s spider) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("爬虫：%v 运行失败，错误信息：%v\n", s.name(), err)
+		}
+		delete(spiderMap, s.name())
+	}()
+
+	log.Printf("启动爬虫：%v\n", s.name())
+	s.run(s)
+	log.Printf("爬虫：%v 已停止运行\n", s.name())
 }

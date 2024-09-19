@@ -28,10 +28,6 @@ func (c *crawl) run(s spider) {
 	}
 }
 
-func addUrl(link string) {
-	ProxyChannel <- link
-}
-
 func catch(s spider, link string) error {
 	if !linkErrorMap.Check(link) {
 		return nil
@@ -58,8 +54,8 @@ func catch(s spider, link string) error {
 	}
 
 	log.Printf("抓取：%s -> %v 个代理地址\n", s.name(), len(urls))
-	for _, url := range urls {
-		addUrl(url)
+	for _, u := range urls {
+		ProxyChannel <- u
 	}
 
 	return nil
