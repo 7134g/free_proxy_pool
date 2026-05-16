@@ -66,8 +66,8 @@ func connect(req *http.Request) ([]byte, error) {
 	client := &http.Client{
 		Timeout: time.Second * 30,
 	}
-	if localProxy != "" {
-		u, _ := url.Parse(localProxy)
+	if lp := getLocalProxy(); lp != "" {
+		u, _ := url.Parse(lp)
 		client.Transport = &http.Transport{Proxy: http.ProxyURL(u)}
 	}
 	resp, err := client.Do(req)

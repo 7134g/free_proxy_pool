@@ -18,7 +18,7 @@ func (c *crawlIp3366) name() string {
 
 func (c *crawlIp3366) genSeek() {
 	baseUrl := "http://www.ip3366.net/?stype=1&page=%d"
-	for page := 1; page < 100; page++ {
+	for page := 1; page < 10; page++ {
 		link := fmt.Sprintf(baseUrl, page)
 		c.links = append(c.links, link)
 	}

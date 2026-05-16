@@ -15,7 +15,7 @@ var (
 )
 
 func init() {
-	ProxyChannel = make(chan string, 200)
+	ProxyChannel = make(chan string, 10000)
 	spiderMap = make(map[string]struct{})
 
 	linkErrorMap = util.NewLinkMap()
@@ -30,6 +30,11 @@ func Crawler() {
 		&crawlIp3366{},
 		&crawlKxDaiLi{},
 		&crawlProxy11{},
+		&crawl89ip{},
+		&crawl66DaiLi{},
+		&crawlProxyScrape{},
+		&crawlGitHub{},
+		&crawlZdaye{},
 	)
 	log.Println("crawler_stop")
 }

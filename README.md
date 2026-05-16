@@ -76,6 +76,3 @@ func httpProxy() http.RoundTripper {
 ```
 
 
-## todo
-1. 将抓取的代理存入redis中
-2. docker 化

@@ -30,24 +30,22 @@ func checkProxy(proxy string) *pool.Task {
 }
 
 func addProxyResult(link string, status bool) {
-	ProxyFinishChannel <- proxyResult{link: link, status: status, createAt: time.Now()}
+	ProxyFinishChannel <- proxyResult{link: link, status: status}
 }
 
 // TestStoreProxy 测试此时库里的代理是否有效
 func TestStoreProxy() {
-	if TesterRunning {
+	if !TesterRunning.CompareAndSwap(false, true) {
 		log.Println("tester is running.......")
 		return
 	}
-
-	TesterRunning = true
 	log.Println("tester_start......测试代理")
-	list := CacheProxyData.slice
+	list := CacheProxyData.Slice()
 	log.Println("tester_count: ", len(list))
 	for _, p := range list {
 		cell.ProxyChannel <- p.Link
 	}
-	TesterRunning = false
+	TesterRunning.Store(false)
 	log.Println("tester_stop")
 }
 

@@ -6,6 +6,9 @@ import (
 	"free_proxy_pool/crawler"
 	"free_proxy_pool/serve"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -21,10 +24,15 @@ func main() {
 
 	go crawler.Run()
 
-	select {}
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
+	<-sig
+
+	log.Println("Shutting down...")
+	config.CloseRedis()
 }
 
 func info() {
-	log.Printf("代理地址：%s\n", config.Cfg.Martian)
+	log.Printf("代理地址：%s\n", config.Cfg.Martian.Url)
 	log.Printf("服务地址：%s\n", config.Cfg.Service.Url)
 }

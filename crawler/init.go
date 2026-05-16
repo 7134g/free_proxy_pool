@@ -3,8 +3,8 @@ package crawler
 import (
 	"context"
 	"free_proxy_pool/config"
-	"free_proxy_pool/util/cas"
 	"free_proxy_pool/util/pool"
+	"sync/atomic"
 	"time"
 )
 
@@ -28,18 +28,14 @@ func newProxy(link string) *proxy {
 type proxyResult struct {
 	link   string
 	status bool
-
-	countFail int
-	createAt  time.Time
 }
 
 var (
-	CacheProxyData *Store
-	TaskPool       *pool.Pool
-	TaskCancel     context.CancelFunc
-
+	CacheProxyData     *Store
+	TaskPool           *pool.Pool
+	TaskCancel         context.CancelFunc
 	ProxyFinishChannel chan proxyResult // 结果队列
-	TesterRunning      bool             // 是否处于测试爬虫运行中
+	TesterRunning      atomic.Bool      // 是否处于测试爬虫运行中
 )
 
 func init() {
@@ -51,6 +47,5 @@ func init() {
 
 	CacheProxyData = &Store{
 		body: map[string]*proxy{},
-		lock: cas.NewSpinLock(),
 	}
 }

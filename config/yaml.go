@@ -1,12 +1,15 @@
 package config
 
 import (
+	"context"
+	"github.com/redis/go-redis/v9"
 	"gopkg.in/yaml.v3"
 	"log"
 	"os"
 )
 
 type Redis struct {
+	Enabled  bool   `yaml:"enabled"`
 	Url      string `yaml:"url"`
 	Password string `yaml:"password"`
 	Key      string `yaml:"key"`
@@ -34,8 +37,9 @@ type setting struct {
 }
 
 var (
-	Cfg        setting
-	ConfigPath string
+	Cfg         setting
+	ConfigPath  string
+	RedisClient *redis.Client
 )
 
 func Init(p string) {
@@ -57,5 +61,29 @@ func Init(p string) {
 }
 
 func InitRedis() {
-	// todo
+	if !Cfg.Redis.Enabled {
+		log.Println("Redis is disabled, using in-memory storage only")
+		return
+	}
+
+	RedisClient = redis.NewClient(&redis.Options{
+		Addr:     Cfg.Redis.Url,
+		Password: Cfg.Redis.Password,
+	})
+
+	if err := RedisClient.Ping(context.Background()).Err(); err != nil {
+		log.Printf("Redis connection failed: %v, falling back to in-memory storage only\n", err)
+		RedisClient = nil
+		return
+	}
+
+	log.Println("Redis connected successfully")
+}
+
+func CloseRedis() {
+	if RedisClient != nil {
+		if err := RedisClient.Close(); err != nil {
+			log.Printf("Redis close failed: %v\n", err)
+		}
+	}
 }

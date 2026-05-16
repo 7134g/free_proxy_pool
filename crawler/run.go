@@ -10,6 +10,8 @@ import (
 )
 
 func Run() {
+	recoverFromRedis()
+
 	c := cron.New()
 	go monitor()
 	// 启动脚本时候立马启动，后面启动定时任务
@@ -41,22 +43,12 @@ func monitor() {
 			}
 
 		case result := <-ProxyFinishChannel:
-			// 新鲜度
 			if result.status {
 				CacheProxyData.inc(result.link)
 				continue
 			}
 			if exist := CacheProxyData.dnc(result.link); exist {
 				continue
-			}
-
-			// 未添加过的新代理
-			ctLessFiveMinute := result.createAt.Add(-time.Minute * 5)
-			if result.createAt.After(ctLessFiveMinute) && result.countFail < 5 {
-				result.countFail++
-				if err := TaskPool.Submit(checkProxy(result.link)); err != nil {
-					log.Println(err)
-				}
 			}
 		}
 	}

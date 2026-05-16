@@ -10,12 +10,12 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"sync/atomic"
 	"time"
 )
 
 var (
 	MonitorAddress = "127.0.0.1:10888" // 监听地址
-	RunningTime    time.Time
 )
 
 var (
@@ -25,11 +25,19 @@ var (
 
 var (
 	serverProxyUrlParse *url.URL // 解析代理
-
-	serverProxy         string // 服务代理地址
-	serverProxyUsername string // 用户名
-	serverProxyPassword string // 密码
+	serverProxy         string   // 服务代理地址
+	serverProxyUsername string   // 用户名
+	serverProxyPassword string   // 密码
 )
+
+var runningTime atomic.Value
+
+func GetRunningTime() time.Time {
+	if v := runningTime.Load(); v != nil {
+		return v.(time.Time)
+	}
+	return time.Time{}
+}
 
 func init() {
 	lock = cas.NewSpinLock()
@@ -108,7 +116,7 @@ func (r *httpProxy) ModifyRequest(req *http.Request) error {
 		return errors.New("proxy is nil")
 	}
 
-	RunningTime = time.Now()
+	runningTime.Store(time.Now())
 	return nil
 }
 

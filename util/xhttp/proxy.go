@@ -5,16 +5,24 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"sync/atomic"
 )
 
 var (
 	lock       = cas.NewSpinLock()
 	errCount   int
-	localProxy string
+	localProxy atomic.Value
 )
 
 func SetLocalProxy(link string) {
-	localProxy = link
+	localProxy.Store(link)
+}
+
+func getLocalProxy() string {
+	if v := localProxy.Load(); v != nil {
+		return v.(string)
+	}
+	return ""
 }
 
 func IncHttpErrorCount() {
@@ -25,7 +33,6 @@ func IncHttpErrorCount() {
 
 func UpdateLocalProxy() {
 	if errCount < 100 {
-		// 错误数大于50
 		return
 	}
 
@@ -42,6 +49,6 @@ func UpdateLocalProxy() {
 	}
 
 	errCount = 0
-	log.Println("当前使用代理：", localProxy)
-	localProxy = string(b)
+	log.Println("当前使用代理：", getLocalProxy())
+	localProxy.Store(string(b))
 }

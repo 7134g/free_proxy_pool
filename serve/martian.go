@@ -30,11 +30,11 @@ func monitor() {
 	for {
 		select {
 		case <-checkMartianProxyTicker.C:
-			if proxy.RunningTime.Sub(now) <= time.Second*5 {
+			if proxy.GetRunningTime().Sub(now) <= time.Second*5 {
 				continue
 			}
 
-			if time.Now().Sub(proxy.RunningTime) <= time.Minute {
+			if time.Now().Sub(proxy.GetRunningTime()) <= time.Minute {
 				if martianProxyStatus {
 					continue
 				}

@@ -49,7 +49,7 @@ func proxyRandom(ctx *gin.Context) {
 }
 
 func proxyUseless(ctx *gin.Context) {
-	link := ctx.GetString("url")
+	link := ctx.Query("url")
 	crawler.CacheProxyData.Del(link)
 	ctx.String(200, "ok")
 }

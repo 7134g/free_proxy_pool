@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p openspec/specs)",
+      "Bash(mkdir -p openspec/specs/__TRACKED_VAR__)",
+      "Bash(cp openspec/changes/port-python-crawlers/specs/__TRACKED_VAR__/spec.md openspec/specs/__TRACKED_VAR__/)"
+    ]
+  }
+}
