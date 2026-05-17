@@ -3,6 +3,7 @@ package crawler
 import (
 	"free_proxy_pool/config"
 	"math/rand"
+	"regexp"
 	"sort"
 	"sync"
 )
@@ -14,7 +15,12 @@ type Store struct {
 	slice []*proxy
 }
 
+var (
+	regTrim = regexp.MustCompile(`\s`)
+)
+
 func (s *Store) add(u string) {
+	u = regTrim.ReplaceAllString(u, "")
 	s.lock.Lock()
 	defer s.lock.Unlock()
 	s.body[u] = newProxy(u)
@@ -31,6 +37,7 @@ func (s *Store) get(u string) (*proxy, bool) {
 func (s *Store) inc(u string) bool {
 	s.lock.Lock()
 	defer s.lock.Unlock()
+	u = regTrim.ReplaceAllString(u, "")
 	if s.body[u] == nil {
 		s.body[u] = newProxy(u)
 	}
